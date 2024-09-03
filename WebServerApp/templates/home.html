@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            background-color: #F0F8FF; /* Light blue background */
+            background-color: #F7F7F7; /* Light gray background */
             font-family: Arial, sans-serif;
             color: #333; /* Dark text for better readability */
         }
@@ -18,24 +18,30 @@
             background-color: #fff; /* White card background */
             border-color: #ddd;
             padding: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow effect */
+            border-radius: 10px; /* Add a slight curve to the card corners */
         }
 
         .card-title {
-            color: #000080; /* Dark blue text for better contrast */
+            color: #337AB7; /* Dark blue text for better contrast */
+            font-weight: bold;
         }
 
         .lead {
-            color: #000;
+            color: #666;
+            font-size: 18px;
         }
 
         .chart-container {
             height: 300px;
+            padding: 20px;
         }
 
         .icon-container {
             position: absolute; /* Make icons absolute within cards */
             top: 0.5rem; /* Adjust icon position as needed */
             right: 0.5rem;
+            font-size: 24px; /* Increase icon size for better visibility */
         }
 
         @keyframes colorChange {
@@ -54,6 +60,9 @@
 
         h1 {
             //animation: colorChange 2s infinite;
+            font-weight: bold;
+            font-size: 36px;
+            margin-bottom: 20px;
         }
 
         /* Mobile-friendly styles */
@@ -69,13 +78,13 @@
                 right: 0.2rem;
             }
             .lead {
-                font-size: 18px;
+                font-size: 16px;
             }
             h1 {
                 font-size: 24px;
             }
             h5 {
-                font-size: 18px;
+                font-size: 16px;
             }
         }
     </style>
@@ -120,7 +129,7 @@
                         <div class="icon-container">
                             <i class="fas fa-cloud-rain fa-2x" style="color: #0073E6"></i>
                         </div>
-                    </div>
+                                       </div>
                 </div>
             </div>
         </div>
@@ -134,137 +143,137 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-    // Function to update date and time
-    function updateDateTime() {
-        var now = new Date();
-        var datetimeStr = now.toLocaleString();
-        document.getElementById('datetime').innerText = datetimeStr;
-    }
-    setInterval(updateDateTime, 1000);
-
-    // Initialize temperature chart
-    var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
-    var temperatureChart = new Chart(temperatureCtx, {
-        type: 'line',
-        data: {
-            labels: [], // Time labels
-            datasets: [{
-                label: 'Temperature (°C)',
-                data: [],
-                borderColor: '#FF9933', // Orange color for temperature line
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-        options: {
-            animation: {
-                duration: 1500,
-                easing: 'easeInOutBounce'
-            },
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'minute',
-                        tooltipFormat: 'DD T'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    min: 10,
-                    max: 50
-                }
-            }
+    <script>
+        // Function to update date and time
+        function updateDateTime() {
+            var now = new Date();
+            var datetimeStr = now.toLocaleString();
+            document.getElementById('datetime').innerText = datetimeStr;
         }
-    });
+        setInterval(updateDateTime, 1000);
 
-    // Initialize humidity chart
-    var humidityCtx = document.getElementById('humidityChart').getContext('2d');
-    var humidityChart = new Chart(humidityCtx, {
-        type: 'line',
-        data: {
-            labels: [], // Time labels
-            datasets: [{
-                label: 'Humidity (%)',
-                data: [],
-                borderColor: '#3399FF', // Blue color for humidity line
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-        options: {
-            animation: {
-                duration: 1500,
-                easing: 'easeInOutBounce'
+        // Initialize temperature chart
+        var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
+        var temperatureChart = new Chart(temperatureCtx, {
+            type: 'line',
+            data: {
+                labels: [], // Time labels
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [],
+                    borderColor: '#FF9933', // Orange color for temperature line
+                    borderWidth: 2,
+                    fill: false
+                }]
             },
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'minute',
-                        tooltipFormat: 'DD T'
-                    }
+            options: {
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutBounce'
                 },
-                y: {
-                    beginAtZero: true,
-                    min: 10,
-                    max: 50
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute',
+                            tooltipFormat: 'DD T'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        min: 10,
+                        max: 50
+                    }
                 }
-            }
-        }
-    });
-
-    // Function to fetch data from the server
-    function fetchData() {
-        $.ajax({
-            url: '/temperatures/',  // Ensure this URL matches the one in urls.py
-            method: 'GET',
-            success: function (response) {
-                console.log("Data received:", response);
-
-                var labels = [];
-                var temperatureData = [];
-                var humidityData = [];
-
-                // Get the latest 20 or 30 data points
-                var latestData = response.slice(-30); // Adjust this number to show last 20 or 30 data points
-
-                latestData.forEach(function (dataPoint) {
-                    labels.push(dataPoint.timestamp);
-                    temperatureData.push(dataPoint.temperature);
-                    humidityData.push(dataPoint.humidity);
-                });
-
-                // Update the temperature chart
-                temperatureChart.data.labels = labels;
-                temperatureChart.data.datasets[0].data = temperatureData;
-                temperatureChart.update();
-
-                // Update the humidity chart
-                humidityChart.data.labels = labels;
-                humidityChart.data.datasets[0].data = humidityData;
-                humidityChart.update();
-
-                // Update the temperature and humidity values with the latest data point
-                var latestTemperature = latestData[latestData.length - 1].temperature;
-                var latestHumidity = latestData[latestData.length - 1].humidity;
-
-                document.getElementById('temperatureValue').innerText = latestTemperature !== null ? latestTemperature + ' °C' : '-- °C';
-                document.getElementById('humidityValue').innerText = latestHumidity !== null ? latestHumidity + ' %' : '-- %';
-            },
-            error: function (error) {
-                console.error("Error fetching data:", error);
             }
         });
-    }
 
-    // Fetch data every 5 seconds
-    setInterval(fetchData, 5000);
-</script>
+        // Initialize humidity chart
+        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
+        var humidityChart = new Chart(humidityCtx, {
+            type: 'line',
+            data: {
+                labels: [], // Time labels
+                datasets: [{
+                    label: 'Humidity (%)',
+                    data: [],
+                    borderColor: '#3399FF', // Blue color for humidity line
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutBounce'
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute',
+                            tooltipFormat: 'DD T'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        min: 10,
+                        max: 50
+                    }
+                }
+            }
+        });
+
+        // Function to fetch data from the server
+        function fetchData() {
+            $.ajax({
+                url: '/temperatures/',  // Ensure this URL matches the one in urls.py
+                method: 'GET',
+                success: function (response) {
+                    console.log("Data received:", response);
+
+                    var labels = [];
+                    var temperatureData = [];
+                    var humidityData = [];
+
+                    // Get the latest 20 or 30 data points
+                    var latestData = response.slice(-30); // Adjust this number to show last 20 or 30 data points
+
+                    latestData.forEach(function (dataPoint) {
+                        labels.push(dataPoint.timestamp);
+                        temperatureData.push(dataPoint.temperature);
+                        humidityData.push(dataPoint.humidity);
+                    });
+
+                    // Update the temperature chart
+                    temperatureChart.data.labels = labels;
+                    temperatureChart.data.datasets[0].data = temperatureData;
+                    temperatureChart.update();
+
+                    // Update the humidity chart
+                    humidityChart.data.labels = labels;
+                    humidityChart.data.datasets[0].data = humidityData;
+                    humidityChart.update();
+
+                    // Update the temperature and humidity values with the latest data point
+                    var latestTemperature = latestData[latestData.length - 1].temperature;
+                    var latestHumidity = latestData[latestData.length - 1].humidity;
+
+                    document.getElementById('temperatureValue').innerText = latestTemperature !== null ? latestTemperature + ' °C' : '-- °C';
+                    document.getElementById('humidityValue').innerText = latestHumidity !== null ? latestHumidity + ' %' : '-- %';
+                },
+                error: function (error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
+        }
+
+        // Fetch data every 5 seconds
+        setInterval(fetchData, 5000);
+    </script>
 </body>
 
 </html>
