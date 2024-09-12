@@ -271,8 +271,36 @@
             });
         }
 
-        // Fetch data every 5 seconds
+        
+        // Fetch data every 2 seconds
         setInterval(fetchData, 2000);
+        function controlRelay(state) {
+            fetch('/relay-control/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
+                },
+                body: JSON.stringify({
+                    'relay_state': state
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message); // Display the response message (Relay ON/OFF)
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+    <div id="relay-control">
+        <button id="relayOnBtn" onclick="controlRelay('true')">Turn Relay ON</button>
+        <button id="relayOffBtn" onclick="controlRelay('false')">Turn Relay OFF</button>
+    </div>
     </script>
 </body>
 
