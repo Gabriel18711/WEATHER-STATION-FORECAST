@@ -1,13 +1,9 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import TemperatureHumidity
-from .serializer import TemperatureHumiditySerializer
-from rest_framework.views import APIView
+from .models import TemperatureReading
+from .serializer import TemperatureReadingSerializer
 from rest_framework.response import Response
-from datetime import datetime
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
 class TemperatureReadingList(generics.ListAPIView):
@@ -52,47 +48,3 @@ def record_data(request):
     
 def temperature_monitor(request):
     return render(request, 'home.html')
-    
-relay_state = False  # Initially, relay is OFF
-
-@csrf_exempt
-def relay_control_view(request):
-    global relay_state
-
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            relay_state_input = data.get('relay_state', None)
-
-            if relay_state_input is not None:
-                # Update relay state based on input
-                if relay_state_input == "true":
-                    relay_state = True
-                    # Add code here to physically turn the relay ON
-                    return JsonResponse({'message': 'Relay turned ON', 'relay_state': 'true'}, status=200)
-                elif relay_state_input == "false":
-                    relay_state = False
-                    # Add code here to physically turn the relay OFF
-                    return JsonResponse({'message': 'Relay turned OFF', 'relay_state': 'false'}, status=200)
-                else:
-                    return JsonResponse({'error': 'Invalid relay state'}, status=400)
-            else:
-                return JsonResponse({'error': 'No relay state provided'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
-    elif request.method == 'GET':
-        # Return the current relay state
-        return JsonResponse({'relay_state': 'true' if relay_state else 'false'}, status=200)
-
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-def get_relay_status(request):
-    """
-    This view returns the current relay status in JSON format.
-    It responds with either "true" or "false" depending on the state.
-    """
-    global relay_state
-
-    # Return relay status as JSON
-    return JsonResponse({'relay_state': relay_state})
