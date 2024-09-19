@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import TemperatureReading
-from .serializer import TemperatureReadingSerializer
-from rest_framework.response import Response
+from .models import TemperatureHumidity
+from .serializer import TemperatureHumiditySerializer
 from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from datetime import datetime
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 from django.http import JsonResponse
 import json
