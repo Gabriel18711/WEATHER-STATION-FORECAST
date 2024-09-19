@@ -31,7 +31,7 @@ class LatestTemperatureAPIView(APIView):
         return Response(serializer.data)
 
 # Function-based view for handling both GET and POST requests
-@api_view(['POST', 'GET'])
+@APIView(['POST', 'GET'])
 def record_data(request):
     if request.method == 'POST':
         serializer = TemperatureReadingSerializer(data=request.data)
