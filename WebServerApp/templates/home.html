@@ -296,13 +296,12 @@
 }
     </script>
 
-  <div id="relay-control">
-    <label class="switch">
-        <input type="checkbox" id="relayToggle" onchange="toggleRelay(this)">
-        <span class="slider round"></span>
-    </label>
-    <p id="relayStatus">Relay is OFF</p>
-</div>
+
+    <div id="relay-control">
+        <button id="relayOnBtn" onclick="controlRelay('true')">Turn Relay ON</button>
+        <button id="relayOffBtn" onclick="controlRelay('false')">Turn Relay OFF</button>
+    </div>
+    
     </script>
 </body>
 
