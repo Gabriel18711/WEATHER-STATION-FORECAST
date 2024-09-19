@@ -271,39 +271,35 @@
             });
         }
 
-        
-    function toggleRelay(checkbox) {
-    const state = checkbox.checked ? 'true' : 'false';
-    fetch('/relay-control/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
-        },
-        body: JSON.stringify({
-            'relay_state': state
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            document.getElementById('relayStatus').innerText = checkbox.checked ? 'Relay is ON' : 'Relay is OFF';
-        } else if (data.error) {
-            alert(data.error);
+        //fetching data from relay
+  setInterval(fetchData, 2000);
+        function controlRelay(state) {
+            fetch('/relay-control/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
+                },
+                body: JSON.stringify({
+                    'relay_state': state
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message); // Display the response message (Relay ON/OFF)
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
-    })
-    .catch(error => console.error('Error:', error));
-}
     </script>
 
-<div id="relay-control">
-    <label class="switch">
-        <input type="checkbox" id="relayToggle" onchange="toggleRelay(this)">
-        <span class="slider round"></span>
-    </label>
-    <p id="relayStatus">BULB BUTTON</p>
-</div>
-    </script>
+    <div id="relay-control" class="text-center mt-4">
+        <button id="relayOnBtn" class="btn btn-primary">Turn Light ON</button>
+        <button id="relayOffBtn" class="btn btn-primary">Turn Light OFF</button>
+    </div>
 </body>
 
 </html>
