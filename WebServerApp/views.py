@@ -2,12 +2,11 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import TemperatureReading
 from .serializer import TemperatureReadingSerializer
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from datetime import datetime
-from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
-import json
 
 from django.http import JsonResponse
 import json
@@ -31,7 +30,7 @@ class LatestTemperatureAPIView(APIView):
         return Response(serializer.data)
 
 # Function-based view for handling both GET and POST requests
-@APIView(['POST', 'GET'])
+@api_view(['POST', 'GET'])
 def record_data(request):
     if request.method == 'POST':
         serializer = TemperatureReadingSerializer(data=request.data)
@@ -59,34 +58,21 @@ def temperature_monitor(request):
 relay_state = False  # Initially, relay is OFF
 
 @csrf_exempt
-def relay_control_view(request):
+def relay_control_view(request, action):
     global relay_state
 
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            relay_state_input = data.get('relay_state', None)
-
-            if relay_state_input is not None:
-                # Update relay state based on input
-                if relay_state_input == "true":
-                    relay_state = True
-                    # Add code here to physically turn the relay ON
-                    return JsonResponse({'message': 'Relay turned ON', 'relay_state': 'true'}, status=200)
-                elif relay_state_input == "false":
-                    relay_state = False
-                    # Add code here to physically turn the relay OFF
-                    return JsonResponse({'message': 'Relay turned OFF', 'relay_state': 'false'}, status=200)
-                else:
-                    return JsonResponse({'error': 'Invalid relay state'}, status=400)
-            else:
-                return JsonResponse({'error': 'No relay state provided'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
-    elif request.method == 'GET':
-        # Return the current relay state
-        return JsonResponse({'relay_state': 'true' if relay_state else 'false'}, status=200)
+    if request.method == 'GET':
+        # Handle the state change based on the action in the URL
+        if action == 'on':
+            relay_state = True
+            # Add code here to physically turn the relay ON
+            return JsonResponse({'message': 'Relay turned ON', 'relay_state': 'true'}, status=200)
+        elif action == 'off':
+            relay_state = False
+            # Add code here to physically turn the relay OFF
+            return JsonResponse({'message': 'Relay turned OFF', 'relay_state': 'false'}, status=200)
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
@@ -96,6 +82,4 @@ def get_relay_status(request):
     It responds with either "true" or "false" depending on the state.
     """
     global relay_state
-
-    # Return relay status as JSON
-    return JsonResponse({'relay_state': relay_state})
+    return JsonResponse({'relay_state': 'true' if relay_state else 'false'}, status=200)
