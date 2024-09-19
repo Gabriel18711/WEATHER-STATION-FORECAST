@@ -7,8 +7,6 @@ urlpatterns = [
     path('temperatures/create/', TemperatureCreateAPIView.as_view(), name='temperature-create'),
     path('latest-temperature/', LatestTemperatureAPIView.as_view(), name='latest-temperature'),
     path('', temperature_monitor, name='temperature-monitor'),
-    path('relay-control/', relay_control_view, name='relay_control'),
+    path('relay-control/<str:action>/', relay_control_view, name='relay_control'),
     path('getrelaystatus/', get_relay_status, name='get_relay_status'),
 ]
-
-
