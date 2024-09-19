@@ -272,8 +272,7 @@
         }
 
         
-        // Fetch data every 2 seconds
-        setInterval(fetchData, 2000);
+       setInterval(fetchData, 2000);
         function controlRelay(state) {
             fetch('/relay-control/', {
                 method: 'POST',
@@ -297,9 +296,9 @@
         }
     </script>
 
-    <div id="relay-control">
-        <button id="relayOnBtn" onclick="controlRelay('true')">Turn Relay ON</button>
-        <button id="relayOffBtn" onclick="controlRelay('false')">Turn Relay OFF</button>
+    <div id="relay-control" class="text-center mt-4">
+        <button id="relayOnBtn" class="btn btn-primary">Turn Light ON</button>
+        <button id="relayOffBtn" class="btn btn-primary">Turn Light OFF</button>
     </div>
     </script>
 </body>
